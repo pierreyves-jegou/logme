@@ -20,7 +20,7 @@ public class ParameterFeature extends AbstractFeature implements LogFeature {
     }
 
     @Override
-    String doGenerateLog(WHEN when, InvocationContextAdapter invocationContextAdapter, Context context) {
+    protected String doGenerateLog(WHEN when, InvocationContextAdapter invocationContextAdapter, Context context) {
         StringBuilder toLog = new StringBuilder(startSymbol);
 
         String parametersResults = Arrays.stream(invocationContextAdapter.getArguments())

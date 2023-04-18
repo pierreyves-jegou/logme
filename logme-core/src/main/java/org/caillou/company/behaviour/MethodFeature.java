@@ -12,7 +12,7 @@ public class MethodFeature extends AbstractFeature implements LogFeature {
     }
 
     @Override
-    String doGenerateLog(WHEN when, InvocationContextAdapter invocationContextAdapter, Context context) {
+    protected String doGenerateLog(WHEN when, InvocationContextAdapter invocationContextAdapter, Context context) {
         return invocationContextAdapter.getTargetMethod().getName();
     }
 }

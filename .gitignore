@@ -1,0 +1,7 @@
+/.idea/
+/logme-cdi/target/
+/logme-core/.idea/
+/logme-core/target/
+/logme-spring/target/
+/logme-spring/logme-spring.iml
+/logme-spring-web-log4j/target/*

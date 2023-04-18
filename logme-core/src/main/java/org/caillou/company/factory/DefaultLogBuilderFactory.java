@@ -13,8 +13,8 @@ public class DefaultLogBuilderFactory {
         addForLevels(logBuilder, new LineStarterFeature(), Level.values());
         addForLevels(logBuilder, new UUIDFeature(), Level.values());
         addForLevels(logBuilder, new MethodFeature(), Level.values());
-        addForLevels(logBuilder, new ParameterAnonymizedFeature(), Level.ERROR, Level.WARN, Level.INFO);
-        addForLevels(logBuilder, new ParameterFeature(), Level.DEBUG, Level.TRACE);
+        addForLevels(logBuilder, new ParameterAnonymizedFeature(), Level.DEBUG, Level.TRACE);
+        //addForLevels(logBuilder, new ParameterFeature(), Level.DEBUG, Level.TRACE);
         addForLevels(logBuilder, new TimerFeature(), Level.values());
         addForLevels(logBuilder, new ReturnFeature(), Level.DEBUG, Level.TRACE);
 
@@ -22,8 +22,6 @@ public class DefaultLogBuilderFactory {
     }
 
     private void addForLevels(LogBuilder logBuilder, LogFeature logFeature, Level ... levels){
-        for(Level level : levels){
-            logBuilder.addFeature(level, logFeature);
-        }
+        logBuilder.addFeature(logFeature, levels);
     }
 }

@@ -17,6 +17,8 @@ public abstract class AbstractFeature implements LogFeature {
         return prefix + doGenerateLog(when, invocationContextAdapter, context) + suffix;
     }
 
-    abstract String doGenerateLog(WHEN when, InvocationContextAdapter invocationContextAdapter, Context context);
+    protected abstract String doGenerateLog(WHEN when,
+                                            InvocationContextAdapter invocationContextAdapter,
+                                            Context context);
 
 }

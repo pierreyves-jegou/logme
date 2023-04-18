@@ -3,14 +3,15 @@ package org.caillou.company.config;
 import org.caillou.company.aspect.LogSpringAspect;
 import org.caillou.company.factory.DefaultLogBuilderFactory;
 import org.caillou.company.factory.SpringInvocationContextAdapterFactory;
-import org.caillou.company.util.LevelExtractorService;
+import org.caillou.company.util.DefaultLevelExtractorServiceImpl;
 import org.caillou.company.service.LogBuilder;
 import org.caillou.company.service.LogService;
+import org.caillou.company.util.LevelExtractorService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class LogMeConfig {
+public class LogMeSpringConfig {
 
     @Bean
     public SpringInvocationContextAdapterFactory createSpringInvocationContextAdapterFactory(){
@@ -29,7 +30,7 @@ public class LogMeConfig {
 
     @Bean
     public LevelExtractorService createLevelExtractorService(){
-        return new LevelExtractorService();
+        return new DefaultLevelExtractorServiceImpl();
     }
 
     @Bean

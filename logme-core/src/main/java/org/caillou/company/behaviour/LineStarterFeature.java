@@ -15,7 +15,7 @@ public class LineStarterFeature extends AbstractFeature implements LogFeature {
     }
 
     @Override
-    String doGenerateLog(WHEN when, InvocationContextAdapter invocationContextAdapter, Context context) {
+    protected String doGenerateLog(WHEN when, InvocationContextAdapter invocationContextAdapter, Context context) {
         return WHEN.BEFORE_PROCEED.equals(when) ? startingPrefix : endingPrefix;
     }
 }

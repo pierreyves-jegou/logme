@@ -6,6 +6,7 @@ import org.caillou.company.bean.InvocationContextAdapter;
 import org.caillou.company.bean.LogFeature;
 import org.caillou.company.constant.Level;
 import org.caillou.company.util.LevelExtractorService;
+import org.caillou.company.util.LevelExtractorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

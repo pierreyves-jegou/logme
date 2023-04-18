@@ -12,7 +12,7 @@ public class TimerFeature extends AbstractFeature implements LogFeature {
     }
 
     @Override
-    String doGenerateLog(WHEN when, InvocationContextAdapter invocationContextAdapter, Context context) {
+    protected String doGenerateLog(WHEN when, InvocationContextAdapter invocationContextAdapter, Context context) {
         double timeSpent = (context.getEndTime() - context.getStartTime()) / 1e6d;
         return String.format("time: %.2f ms", timeSpent);
     }

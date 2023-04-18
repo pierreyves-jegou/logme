@@ -19,6 +19,7 @@
         <module>logme-core</module>
         <module>logme-cdi</module>
         <module>logme-spring</module>
+        <module>logme-spring-web-log4j</module>
     </modules>
 
 <!--    <build>-->

@@ -21,7 +21,7 @@ public class ParameterAnonymizedFeature extends AbstractFeature implements LogFe
     }
 
     @Override
-    String doGenerateLog(WHEN when, InvocationContextAdapter invocationContextAdapter, Context context) {
+    protected String doGenerateLog(WHEN when, InvocationContextAdapter invocationContextAdapter, Context context) {
         Parameter[] parameters = invocationContextAdapter.getTargetMethod().getParameters();
         StringBuilder toLog = new StringBuilder(startSymbol);
 

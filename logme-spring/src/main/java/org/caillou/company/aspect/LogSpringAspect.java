@@ -8,6 +8,7 @@ import org.caillou.company.factory.SpringInvocationContextAdapterFactory;
 import org.caillou.company.service.LogService;
 import org.springframework.stereotype.Component;
 
+
 @Aspect
 @Component
 public class LogSpringAspect {

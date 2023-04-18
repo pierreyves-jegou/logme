@@ -12,7 +12,7 @@ public class UUIDFeature extends AbstractFeature  implements LogFeature {
     }
 
     @Override
-    String doGenerateLog(WHEN when, InvocationContextAdapter invocationContextAdapter, Context context) {
+    protected String doGenerateLog(WHEN when, InvocationContextAdapter invocationContextAdapter, Context context) {
         return context.getUuid().toString();
     }
 }

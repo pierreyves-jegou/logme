@@ -1,5 +1,10 @@
 package org.caillou.company.logme.spring.web.log4j.config;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Filter;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.filter.DynamicThresholdFilter;
+import org.apache.logging.log4j.core.util.KeyValuePair;
 import org.caillou.company.behaviour.*;
 import org.caillou.company.constant.Level;
 import org.caillou.company.factory.DefaultLogBuilderFactory;
@@ -14,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+
+import javax.annotation.PostConstruct;
 
 @Configuration
 public class WebLogMeConfig {
@@ -46,6 +53,19 @@ public class WebLogMeConfig {
     @Primary
     public LogService createLogServiceWeb(LogBuilder logBuilder, LevelExtractorService levelExtractorService){
         return new LogService(logBuilder, levelExtractorService);
+    }
+
+    @PostConstruct
+    private void initLog4jConfiguration(){
+        final LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        KeyValuePair[] pair = {new KeyValuePair("FULL_TRACE_ENABLED", "TRACE")};
+        DynamicThresholdFilter dynamicThresholdFilter = DynamicThresholdFilter.createFilter("TRACE_IT",
+                pair,
+                org.apache.logging.log4j.Level.ERROR,
+                Filter.Result.ACCEPT,
+                Filter.Result.NEUTRAL);
+        ctx.addFilter(dynamicThresholdFilter);
+
     }
 
 }

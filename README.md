@@ -8,12 +8,13 @@
 - [X] Possibilité de rejouer une requête avec un header supplémentaire et d'obtenir l'ensemble des logs au niveau "TRACE"
 -------------------------------
 ### Ongoing
-- [X] Refactor du DynamicThreasholdFilter : ne doit pas être porté par le module java final mais par la lib
+
 
 -------------------------------
 ### Todos
 - [ ] IHM pour monitorer les logs
-- [ ] Revoir les infos / niveau de log pour une meilleure cohérence 
+- [ ] Revoir les infos / niveau de log pour une meilleure cohérence
+- [ ] Possibilité de surcharger le message de log
 -------------------------------
 ### Maybe
 - [ ] Plutot que de réaliser de l'introspection pour les champs confidentiels, voir si possibilité de générer du bytecode via javaagent pour créer les méthodes de log

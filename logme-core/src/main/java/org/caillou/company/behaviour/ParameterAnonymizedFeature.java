@@ -4,16 +4,26 @@ import org.caillou.company.annotation.Confidential;
 import org.caillou.company.bean.Context;
 import org.caillou.company.bean.InvocationContextAdapter;
 import org.caillou.company.bean.LogFeature;
+import org.caillou.company.service.GlobalFormatter;
 
 import java.lang.reflect.Parameter;
+import java.util.AbstractMap;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.caillou.company.constant.ConfidentialConstant.CONFIDENTIAL_CONTENT;
+import static org.caillou.company.constant.ConfidentialConstant.NOT_RGPD_SAFE_MESSAGE;
+
 public class ParameterAnonymizedFeature extends AbstractFeature implements LogFeature {
 
-    private String delimiter = ",";
-    private String startSymbol = "(";
-    private String endSymbol = ")";
+    private final GlobalFormatter globalFormatter;
+    private final int maxNarrowCpt;
+
+    public ParameterAnonymizedFeature(final GlobalFormatter globalFormatter, int maxNarrowCpt){
+        this.globalFormatter = globalFormatter;
+        this.maxNarrowCpt = maxNarrowCpt;
+    }
 
     @Override
     public WHEN when() {
@@ -22,22 +32,26 @@ public class ParameterAnonymizedFeature extends AbstractFeature implements LogFe
 
     @Override
     protected String doGenerateLog(WHEN when, InvocationContextAdapter invocationContextAdapter, Context context) {
-        Parameter[] parameters = invocationContextAdapter.getTargetMethod().getParameters();
-        StringBuilder toLog = new StringBuilder(startSymbol);
+        if(!context.isRgpdSafe()){
+            return NOT_RGPD_SAFE_MESSAGE;
+        }
 
-        String parametersResults = IntStream.range(0, parameters.length)
+        Parameter[] parameters = invocationContextAdapter.getTargetMethod().getParameters();
+
+        List<AbstractMap.SimpleEntry<Parameter, Object>> entries = IntStream
+                .range(0, parameters.length)
                 .mapToObj(index -> {
                     Parameter parameter = parameters[index];
-                    Object parameterValue = invocationContextAdapter.getArguments()[index];
-                    if (parameter.getAnnotation(Confidential.class) != null) {
-                        return "@confidentifal";
-                    } else {
-                        return parameterValue.toString();
+                    Object finalResultObject;
+                    if(parameter.isAnnotationPresent(Confidential.class)){
+                        finalResultObject = CONFIDENTIAL_CONTENT;
+                    }else{
+                        finalResultObject = invocationContextAdapter.getArguments()[index];
                     }
-                }).collect(Collectors.joining(delimiter));
 
-        toLog.append(parametersResults);
-        toLog.append(endSymbol);
-        return toLog.toString();
+                    return new AbstractMap.SimpleEntry<>(parameter, finalResultObject);
+                }).collect(Collectors.toList());
+
+        return globalFormatter.extractLogs(this.maxNarrowCpt, entries.toArray(new AbstractMap.SimpleEntry[]{}));
     }
 }

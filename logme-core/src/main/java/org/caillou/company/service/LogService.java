@@ -1,11 +1,11 @@
 package org.caillou.company.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.caillou.company.annotation.LogMe;
 import org.caillou.company.bean.Context;
 import org.caillou.company.bean.InvocationContextAdapter;
 import org.caillou.company.bean.LogFeature;
 import org.caillou.company.constant.Level;
-import org.caillou.company.util.LevelExtractorService;
 import org.caillou.company.util.LevelExtractorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ public class LogService {
     private final LogBuilder logBuilder;
     private final LevelExtractorService levelExtractorService;
 
-    public LogService(LogBuilder logBuilder, LevelExtractorService levelExtractorService){
+    public LogService(LogBuilder logBuilder, LevelExtractorService levelExtractorService) {
         this.logBuilder = logBuilder;
         this.levelExtractorService = levelExtractorService;
     }
@@ -26,19 +26,29 @@ public class LogService {
 
     public Object log(InvocationContextAdapter invocationContextAdapter) throws Throwable {
         Context context = new Context();
-        context.setUuid(UUID.randomUUID());
         Logger logger = LoggerFactory.getLogger(invocationContextAdapter.getTargetClass());
-        long startTime = System.nanoTime();
-        context.setStartTime(startTime);
-        logBefore(logger, invocationContextAdapter, context);
+
+        try {
+            context.setUuid(UUID.randomUUID());
+            LogMe logMeAnnotation = invocationContextAdapter.getTargetMethod().getAnnotation(LogMe.class);
+            context.setRgpdSafe(logMeAnnotation.rgpdSafe());
+            long startTime = System.nanoTime();
+            context.setStartTime(startTime);
+            logBefore(logger, invocationContextAdapter, context);
+        } catch (Exception e) {
+            logIt(Level.WARN, logger, "Une exception dans le systeme de logging est apparue. Elle n'est probabelement pas liée au traitement original" + e.getMessage());
+        }
 
         Object result = invocationContextAdapter.proceed();
-        context.setResult(result);
 
-        long endTime = System.nanoTime();
-        context.setEndTime(endTime);
-
-        logAfter(logger, invocationContextAdapter, context);
+        try {
+            context.setResult(result);
+            long endTime = System.nanoTime();
+            context.setEndTime(endTime);
+            logAfter(logger, invocationContextAdapter, context);
+        } catch (Exception e) {
+            logIt(Level.WARN, logger, "Une exception dans le systeme de logging est apparue. Elle n'est probabelement pas liée au traitement original" + e.getMessage());
+        }
         return result;
     }
 

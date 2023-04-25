@@ -7,13 +7,12 @@ import org.apache.logging.log4j.core.filter.DynamicThresholdFilter;
 import org.apache.logging.log4j.core.util.KeyValuePair;
 import org.caillou.company.behaviour.*;
 import org.caillou.company.constant.Level;
-import org.caillou.company.factory.DefaultLogBuilderFactory;
 import org.caillou.company.logme.spring.web.log4j.behaviour.RequestUUIDFeature;
 import org.caillou.company.logme.spring.web.log4j.requestScope.RequestTrace;
 import org.caillou.company.logme.spring.web.log4j.util.WebLevelExtractorService;
+import org.caillou.company.service.GlobalFormatter;
 import org.caillou.company.service.LogBuilder;
 import org.caillou.company.service.LogService;
-import org.caillou.company.util.DefaultLevelExtractorServiceImpl;
 import org.caillou.company.util.LevelExtractorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -31,15 +30,16 @@ public class WebLogMeConfig {
 
     @Primary
     @Bean
-    public LogBuilder createLogBehaviorWeb(){
+    public LogBuilder createLogBehaviorWeb(GlobalFormatter globalFormatter){
+        int maxNarrowCpt = 4;
         LogBuilder logBuilder = new LogBuilder();
         logBuilder.addFeature(new LineStarterFeature(), Level.values());
         logBuilder.addFeature(requestUUIDFeature, Level.values());
         logBuilder.addFeature(new UUIDFeature(), Level.values());
         logBuilder.addFeature(new MethodFeature(), Level.values());
-        logBuilder.addFeature(new ParameterAnonymizedFeature(), Level.DEBUG, Level.TRACE);
+        logBuilder.addFeature(new ParameterAnonymizedFeature(globalFormatter, maxNarrowCpt), Level.DEBUG, Level.TRACE);
         logBuilder.addFeature(new TimerFeature(), Level.values());
-        logBuilder.addFeature(new ReturnFeature(),  Level.DEBUG, Level.TRACE);
+        logBuilder.addFeature(new ReturnFeature(globalFormatter, maxNarrowCpt),  Level.DEBUG, Level.TRACE);
         return logBuilder;
     }
 
@@ -65,7 +65,6 @@ public class WebLogMeConfig {
                 Filter.Result.ACCEPT,
                 Filter.Result.NEUTRAL);
         ctx.addFilter(dynamicThresholdFilter);
-
     }
 
 }

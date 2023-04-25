@@ -15,10 +15,11 @@
 - [ ] IHM pour monitorer les logs
 - [ ] Revoir les infos / niveau de log pour une meilleure cohérence
 - [ ] Possibilité de surcharger le message de log
+- [ ] Pouvoir passer l'UUID de requete dans un header HTTP
 -------------------------------
 ### Maybe
 - [ ] Plutot que de réaliser de l'introspection pour les champs confidentiels, voir si possibilité de générer du bytecode via javaagent pour créer les méthodes de log
 - [ ] Ajouter une propriété de configuration "confidential.ready=false" qui permet lorsque le module cible n'a pas fait l'exercice RGPD d'avoir un mode de log moins intrusif
-- [ ] Voir la possibilité d'ajouter des "LogFeature" au niveau du formater log4j (notamment pour l'UUID de requête)
+- [ ] Voir la possibilité d'ajouter des "LogFeature" au niveau du formatter log4j (notamment pour l'UUID de requête)
 - [ ] Possibilité de passer l'ensemble d'une CATAGORY (DAO/SERVICE/ETC) sur un LEVEL different
-
+- [ ] Pouvoir saisir le temps max dasn l'annotation et faire un log plus aggressif si temps dépassé

@@ -17,4 +17,5 @@ public class Context {
 
     long endTime;
 
+    boolean rgpdSafe;
 }

@@ -13,6 +13,8 @@ public @interface LogMe {
 
     Level level() default Level.INFO;
 
+    boolean rgpdSafe() default false;
+
     String message() default "";
 
     String parameters() default "";

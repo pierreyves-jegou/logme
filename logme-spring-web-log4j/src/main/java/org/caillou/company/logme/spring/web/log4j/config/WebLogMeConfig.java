@@ -1,5 +1,6 @@
 package org.caillou.company.logme.spring.web.log4j.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -10,16 +11,19 @@ import org.caillou.company.constant.Level;
 import org.caillou.company.logme.spring.web.log4j.behaviour.RequestUUIDFeature;
 import org.caillou.company.logme.spring.web.log4j.requestScope.RequestTrace;
 import org.caillou.company.logme.spring.web.log4j.util.WebLevelExtractorService;
-import org.caillou.company.service.GlobalFormatter;
+import org.caillou.company.service.GlobalDebugger;
 import org.caillou.company.service.LogBuilder;
 import org.caillou.company.service.LogService;
+import org.caillou.company.service.logformater.*;
 import org.caillou.company.util.LevelExtractorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 import javax.annotation.PostConstruct;
+import java.util.Arrays;
 
 @Configuration
 public class WebLogMeConfig {
@@ -30,7 +34,7 @@ public class WebLogMeConfig {
 
     @Primary
     @Bean
-    public LogBuilder createLogBehaviorWeb(GlobalFormatter globalFormatter){
+    public LogBuilder createLogBehaviorWeb(GlobalDebugger globalFormatter){
         int maxNarrowCpt = 4;
         LogBuilder logBuilder = new LogBuilder();
         logBuilder.addFeature(new LineStarterFeature(), Level.values());
@@ -65,6 +69,23 @@ public class WebLogMeConfig {
                 Filter.Result.ACCEPT,
                 Filter.Result.NEUTRAL);
         ctx.addFilter(dynamicThresholdFilter);
+    }
+
+
+    @Value(value = "${logme.filters.packages:}")
+    private String whitePackages;
+
+    @Bean
+    public GlobalDebugger globalFormatter(){
+        ObjectMapper objectMapper = new ObjectMapper();
+        BasicDebugger basicFormatter = new BasicDebugger();
+        CollectionDebugger collectionFormatter = new CollectionDebugger(objectMapper);
+        EntryDebugger entryFormatter = new EntryDebugger(objectMapper);
+        GlobalDebugger globalFormatter = new GlobalDebugger(objectMapper);
+        ProjectPackageDebugger projectPackageDebugger = new ProjectPackageDebugger(objectMapper, whitePackages);
+        PrimitiveDebugger primitiveDebugger = new PrimitiveDebugger(objectMapper);
+        globalFormatter.addHandlers(Arrays.asList(primitiveDebugger, basicFormatter, projectPackageDebugger, collectionFormatter, entryFormatter));
+        return globalFormatter;
     }
 
 }

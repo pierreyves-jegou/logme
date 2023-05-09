@@ -4,7 +4,7 @@ import org.caillou.company.annotation.Confidential;
 import org.caillou.company.bean.Context;
 import org.caillou.company.bean.InvocationContextAdapter;
 import org.caillou.company.bean.LogFeature;
-import org.caillou.company.service.GlobalFormatter;
+import org.caillou.company.service.GlobalDebugger;
 
 import java.lang.reflect.Parameter;
 import java.util.AbstractMap;
@@ -17,11 +17,11 @@ import static org.caillou.company.constant.ConfidentialConstant.NOT_RGPD_SAFE_ME
 
 public class ParameterAnonymizedFeature extends AbstractFeature implements LogFeature {
 
-    private final GlobalFormatter globalFormatter;
+    private final GlobalDebugger globalDebugger;
     private final int maxNarrowCpt;
 
-    public ParameterAnonymizedFeature(final GlobalFormatter globalFormatter, int maxNarrowCpt){
-        this.globalFormatter = globalFormatter;
+    public ParameterAnonymizedFeature(final GlobalDebugger globalDebugger, int maxNarrowCpt){
+        this.globalDebugger = globalDebugger;
         this.maxNarrowCpt = maxNarrowCpt;
     }
 
@@ -52,6 +52,6 @@ public class ParameterAnonymizedFeature extends AbstractFeature implements LogFe
                     return new AbstractMap.SimpleEntry<>(parameter, finalResultObject);
                 }).collect(Collectors.toList());
 
-        return globalFormatter.extractLogs(this.maxNarrowCpt, entries.toArray(new AbstractMap.SimpleEntry[]{}));
+        return globalDebugger.extractLogs(this.maxNarrowCpt, entries.toArray(new AbstractMap.SimpleEntry[]{}));
     }
 }

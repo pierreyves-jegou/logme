@@ -26,7 +26,7 @@ public class LogService {
 
     public Object log(InvocationContextAdapter invocationContextAdapter) throws Throwable {
         Context context = new Context();
-        Logger logger = LoggerFactory.getLogger(invocationContextAdapter.getTargetClass());
+        Logger logger = LoggerFactory.getLogger(invocationContextAdapter.getTargetMethod().getDeclaringClass());
 
         try {
             context.setUuid(UUID.randomUUID());

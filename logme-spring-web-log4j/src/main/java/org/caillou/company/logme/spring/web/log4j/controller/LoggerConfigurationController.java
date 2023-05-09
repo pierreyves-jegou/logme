@@ -89,13 +89,9 @@ public class LoggerConfigurationController {
                     if (loggersMap.containsKey(loggerPayload.getLoggerKey())) {
                         loggersMap.get(loggerPayload.getLoggerKey()).setLevel(Level.toLevel(loggerPayload.getLoggerLevel()));
                     } else {
-                        LoggerConfig loggerConfig = LoggerConfig.newBuilder()
-                                .withConfig(configuration)
-                                .withLoggerName(loggerPayload.getLoggerKey())
-                                .withAdditivity(false)
-                                .withRefs(appenderRefs.toArray(new AppenderRef[0]))
-                                .withLevel(Level.toLevel(loggerPayload.getLoggerLevel()))
-                                .build();
+                        LoggerConfig loggerConfig = new LoggerConfig(loggerPayload.getLoggerKey(),
+                                Level.toLevel(loggerPayload.getLoggerLevel()),
+                                false);
                         for (Appender appender : appenders) {
                             loggerConfig.addAppender(appender, loggerConfig.getLevel(), null);
                         }
